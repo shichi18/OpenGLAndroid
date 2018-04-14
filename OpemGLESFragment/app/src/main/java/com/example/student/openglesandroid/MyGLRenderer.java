@@ -20,7 +20,7 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         //背景のフレームの色を設定
-        GLES20.glClearColor(0.0f,0.0f,0.0f,1.0f);
+        GLES20.glClearColor(0.0f,0.0f,256.0f,1.0f);
 
         // 三角形の初期化
         mTriangle = new Triangle();
