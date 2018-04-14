@@ -1,5 +1,7 @@
 package com.example.student.openglesandroid;
 
+import android.opengl.GLES20;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -9,6 +11,21 @@ import java.nio.FloatBuffer;
  */
 
 public class Triangle {
+
+
+    private final String vertexShaderCode =
+            "attribute vec4 vPosition;" +
+                    "void main() {" +
+                    "  gl_Position = vPosition;" +
+                    "}";
+
+    private final String fragmentShaderCode =
+            "precision mediump float;" +
+                    "uniform vec4 vColor;" +
+                    "void main() {" +
+                    "  gl_FragColor = vColor;" +
+                    "}";
+
     private FloatBuffer vertexBuffer;
 
     // 配列の頂点あたりの座標数
@@ -22,8 +39,9 @@ public class Triangle {
     // RGBAで色設定
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
 
-    public Triangle() {
+    private final int mProgram;
 
+    public Triangle() {
         // 経常座標の頂点のバイトバッファを初期化
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (座標の数 * フロートあたり 4 bytes )
@@ -41,5 +59,58 @@ public class Triangle {
         // 最初の座標を読み取るためにバッファを設定
         vertexBuffer.position(0);
 
+        int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
+                vertexShaderCode);
+        int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
+                fragmentShaderCode);
+
+        // 空のOpenGL ESプログラムを作成
+        mProgram = GLES20.glCreateProgram();
+
+        // プログラムに頂点シェーダを追加
+        GLES20.glAttachShader(mProgram, vertexShader);
+
+        // プログラムにフラグメントシェーダを追加
+        GLES20.glAttachShader(mProgram, fragmentShader);
+
+        // OpenGL ESプログラム実行ファイルを作成
+        GLES20.glLinkProgram(mProgram);
+
+    }
+
+    private int mPositionHandle;
+    private int mColorHandle;
+
+    private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
+    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+
+
+    public void draw() {
+
+        // OpenGL ES環境にプログラムを追加する
+        GLES20.glUseProgram(mProgram);
+
+        // 頂点シェーダのvPositionメンバにハンドルを渡す
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
+
+        // 三角形の頂点へのハンドルを有効にする
+        GLES20.glEnableVertexAttribArray(mPositionHandle);
+
+        // 三角座標データを準備
+        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
+                GLES20.GL_FLOAT, false,
+                vertexStride, vertexBuffer);
+
+        // フラグメントシェーダのハンドルを取得するColor member
+        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
+
+        // 三角形を描画するための色を設定
+        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+
+        //三角形を描く
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+
+        // 頂点配列を無効にする
+        GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 }
