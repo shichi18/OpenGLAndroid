@@ -35,13 +35,13 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
         //背景色の再描画
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        // Set the camera position (View matrix)
+        //カメラの位置を設定する（View matrix）
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
-        // Calculate the projection and view transformation
+        // 投影とビュー変換を計算する
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        // Draw shape
+        // 三角形の描画
         mTriangle.draw(mMVPMatrix);
     }
 
