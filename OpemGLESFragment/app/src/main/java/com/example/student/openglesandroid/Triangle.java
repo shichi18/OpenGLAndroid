@@ -13,28 +13,19 @@ import java.nio.FloatBuffer;
 public class Triangle {
 
     private final String vertexShaderCode =
-            // This matrix member variable provides a hook to manipulate
-            // the coordinates of the objects that use this vertex shader
+            //この行列メンバー変数は、操作するためのフックを提供
+            // この頂点シェーダを使用するオブジェクトの座標
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
                     "void main() {" +
-                    // the matrix must be included as a modifier of gl_Position
-                    // Note that the uMVPMatrix factor *must be first* in order
-                    // for the matrix multiplication product to be correct.
+                    //マトリックスはgl_Positionの修飾子として含める必要がある
+                    // uMVPMatrix係数*が最初に*必要であることに注意
+                    // 行列乗算プロダクトが正しくなるようにする。
                     "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
-    // Use to access and set the view transformation
+    // ビュー変換にアクセスして設定するために使用
     private int mMVPMatrixHandle;
-
-
-
-//
-//    private final String vertexShaderCode =
-//            "attribute vec4 vPosition;" +
-//                    "void main() {" +
-//                    "  gl_Position = vPosition;" +
-//                    "}";
 
     private final String fragmentShaderCode =
             "precision mediump float;" +
@@ -124,10 +115,10 @@ public class Triangle {
         // 三角形を描画するための色を設定
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
-        // get handle to shape's transformation matrix
+        // 形状の変換行列にハンドルを渡す
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 
-        // Pass the projection and view transformation to the shader
+        // 投影とビュー変換をシェーダに渡す
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         //三角形を描く
