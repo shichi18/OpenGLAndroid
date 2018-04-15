@@ -3,6 +3,7 @@ package com.example.student.openglesandroid;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -30,8 +31,9 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
     }
 
     //Viewの再描画ごとに呼び出し
-    @Override
-    public void onDrawFrame(GL10 unused) {
+    private float[] mRotationMatrix = new float[16];
+    public void onDrawFrame(GL10 gl) {
+        float[] scratch = new float[16];
         //背景色の再描画
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
@@ -40,9 +42,20 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
 
         // 投影とビュー変換を計算する
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        //float[] scratch = new float[16];
+
+        //三角形の回転を作成する
+        // long time = SystemClock.uptimeMillis（）％4000L;
+        // 浮動角度= 0.090f *（（int）時間）;
+        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, -1.0f);
+
+        //投影行列とカメラビューとの回転行列を結合
+        //mMVPMatrixファクタ*は、最初に*必要であることに注意
+        // 行列乗算プロダクトが正しくなるように
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
 
         // 三角形の描画
-        mTriangle.draw(mMVPMatrix);
+        mTriangle.draw(scratch);
     }
 
     private final float[] mMVPMatrix = new float[16];// "Model View Projection Matrix"の略
@@ -64,7 +77,7 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
     public static int loadShader(int type, String shaderCode){
 
         // 頂点シェーダタイプを作成 (GLES20.GL_VERTEX_SHADER)
-        //  //またはフラグメントシェーダタイプ (GLES20.GL_FRAGMENT_SHADER)
+        //またはフラグメントシェーダタイプ (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
 
         //ソースコードをシェーダに追加してコンパイルする
@@ -74,7 +87,15 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
         return shader;
     }
 
+    public volatile float mAngle;
 
 
+    public float getAngle() {
+        return mAngle;
+    }
 
+
+    public void setAngle(float angle) {
+        mAngle = angle;
+    }
 }
