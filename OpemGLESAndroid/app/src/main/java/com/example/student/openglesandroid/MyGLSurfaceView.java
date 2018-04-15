@@ -22,8 +22,8 @@ class MyGLSurfaceView extends GLSurfaceView {
         // GLSurfaceViewで描画するためのレンダラーを設定
         setRenderer(mRenderer);
 
-        // Render the view only when there is a change in the drawing data.
-        // To allow the triangle to rotate automatically, this line is commented out:
+        //描画データに変更がある場合にのみ、ビューをレンダリングします。
+        // 三角形が自動的に回転するようにするには、この行をコメントアウト：
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
