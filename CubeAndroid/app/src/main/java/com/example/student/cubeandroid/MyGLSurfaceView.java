@@ -30,9 +30,7 @@ class MyGLSurfaceView extends GLSurfaceView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        // MotionEvent reports input details from the touch screen
-        // and other input controls. In this case, you are only
-        // interested in events where the touch position changed.
+        // TODO: 2018/04/21 自由回転に変更
 
         float x = e.getX();
         float y = e.getY();

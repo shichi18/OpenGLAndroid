@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 public class Cube {
+    // TODO: 2018/04/21 光源の追加
 
     private final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
