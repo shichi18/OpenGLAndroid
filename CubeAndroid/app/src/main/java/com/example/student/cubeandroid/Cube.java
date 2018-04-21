@@ -101,7 +101,7 @@ public class Cube {
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
 
-    public void draw() {
+    public void draw(float[] mMVPMatrix) {
 
         GLES20.glUseProgram(mProgram);
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
@@ -111,12 +111,13 @@ public class Cube {
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
-
+        // get handle to fragment shader's vColor member
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
 
-
+        // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
+        // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
 
         // Disable vertex array
