@@ -23,9 +23,13 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
         mCube = new Cube();
     }
 
+    private float[] mRotationMatrix = new float[16];
+
     //描画のために呼ばれる。1フレーム毎に呼ばれる。
     @Override
-    public void onDrawFrame(GL10 unused) {
+    public void onDrawFrame(GL10 gl) {
+        float[] scratch = new float[16];
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         // Set the camera position (View matrix)
         Matrix.setLookAtM(mViewMatrix, 0, 0, 4, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -34,8 +38,17 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
+        // Create a rotation transformation for the triangle
+//        long time = SystemClock.uptimeMillis() % 4000L;
+//        float angle = 0.090f * ((int) time);
+        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, -1.0f);
+        // Combine the rotation matrix with the projection and camera view
+        // Note that the mMVPMatrix factor *must be first* in order
+        // for the matrix multiplication product to be correct.
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+
         // Draw shape
-        mCube.draw(mMVPMatrix);
+        mCube.draw(scratch);
 
     }
 
@@ -67,5 +80,16 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
             Log.e(TAG, glOperation + ": glError " + error);
             throw new RuntimeException(glOperation + ": glError " + error);
         }
+    }
+
+    public volatile float mAngle;
+
+    public float getAngle() {
+        return mAngle;
+    }
+
+
+    public void setAngle(float angle) {
+        mAngle = angle;
     }
 }

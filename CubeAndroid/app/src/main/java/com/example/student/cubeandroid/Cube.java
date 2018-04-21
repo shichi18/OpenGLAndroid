@@ -62,9 +62,7 @@ public class Cube {
 
     public Cube() {
         // initialize vertex byte buffer for shape coordinates
-        ByteBuffer bb = ByteBuffer.allocateDirect(
-                // (# of coordinate values * 4 bytes per float)
-                cubeCoords.length * 4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(cubeCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(cubeCoords);
