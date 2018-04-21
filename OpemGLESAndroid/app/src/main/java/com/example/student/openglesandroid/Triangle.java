@@ -24,8 +24,7 @@ public class Triangle {
                     "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
-    // ビュー変換にアクセスして設定するために使用
-    private int mMVPMatrixHandle;
+
 
     private final String fragmentShaderCode =
             "precision mediump float;" +
@@ -34,7 +33,14 @@ public class Triangle {
                     "  gl_FragColor = vColor;" +
                     "}";
 
+
+
     private FloatBuffer vertexBuffer;
+    private final int mProgram;
+    private int mPositionHandle;
+    private int mColorHandle;
+    // ビュー変換にアクセスして設定するために使用
+    private int mMVPMatrixHandle;
 
     // 配列の頂点あたりの座標数
     static final int COORDS_PER_VERTEX = 3;
@@ -44,11 +50,7 @@ public class Triangle {
             0.5f, -0.311004243f, 0.0f  // 右下
     };
 
-    // RGBAで色設定
-    //float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
-    float color[] = { 0.0f, 200.0f, 256.0f, 1.0f };
 
-    private final int mProgram;
 
     public Triangle() {
         // 経常座標の頂点のバイトバッファを初期化
@@ -87,12 +89,12 @@ public class Triangle {
 
     }
 
-    private int mPositionHandle;
-    private int mColorHandle;
-
     private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
+    // RGBAで色設定
+    //float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float color[] = { 0.0f, 200.0f, 256.0f, 1.0f };
 
     public void draw(float[] mvpMatrix) { // pass in the calculated transformation matrix
 
