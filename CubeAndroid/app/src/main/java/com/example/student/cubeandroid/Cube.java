@@ -5,13 +5,15 @@ import android.opengl.GLES20;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 public class Cube {
 
     private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
+            "uniform mat4 uMVPMatrix;" +
+                    "attribute vec4 vPosition;" +
                     "void main() {" +
-                    "  gl_Position = vPosition;" +
+                    "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
     private final String fragmentShaderCode =
@@ -21,93 +23,89 @@ public class Cube {
                     "  gl_FragColor = vColor;" +
                     "}";
 
-    private FloatBuffer vertexBuffer;
+    private final FloatBuffer vertexBuffer;
+    private final ShortBuffer drawListBuffer;
+    private final int mProgram;
+    private int mPositionHandle;
+    private int mColorHandle;
+    private int mMVPMatrixHandle;
 
-    static final int COORDS_PER_VERTEX =3;
+    // number of coordinates per vertex in this array
+    static final int COORDS_PER_VERTEX = 3;
     static float cubeCoords[] = {
-            // 前
-            -0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            -0.5f, 0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
 
-            // 後
             -0.5f, -0.5f, -0.5f,
             0.5f, -0.5f, -0.5f,
-            -0.5f, 0.5f, -0.5f,
             0.5f, 0.5f, -0.5f,
-
-            // 左
-            -0.5f, -0.5f, 0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, 0.5f, 0.5f,
             -0.5f, 0.5f, -0.5f,
 
-            // 右
-            0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, 0.5f, 0.5f,
-            0.5f, 0.5f, -0.5f,
-
-            // 上
-            -0.5f, 0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
-            -0.5f, 0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f,
-
-            // 底
             -0.5f, -0.5f, 0.5f,
             0.5f, -0.5f, 0.5f,
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f
+            0.5f, 0.5f, 0.5f,
+            -0.5f, 0.5f, 0.5f
+
     };
 
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    private final short drawOrder[] = {
+//            0, 1, 2, 0, 2, 3
+            0, 1, 3, 3, 1, 2, // Front
+            0, 1, 4, 4, 5, 1, // Bottom
+            1, 2, 5, 5, 6, 2, // Right
+            2, 3, 6, 6, 7, 3, // Top
+            3, 7, 4, 4, 3, 0, // Left
+            4, 5, 7, 7, 6, 5, // Rear
+    }; // order to draw vertices
 
-    private final int mProgram;
+    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    public Cube(){
-        ByteBuffer bb = ByteBuffer.allocateDirect(cubeCoords.length * 4);
+    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
+
+    public Cube() {
+        // initialize vertex byte buffer for shape coordinates
+        ByteBuffer bb = ByteBuffer.allocateDirect(
+                // (# of coordinate values * 4 bytes per float)
+                cubeCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
-
         vertexBuffer = bb.asFloatBuffer();
         vertexBuffer.put(cubeCoords);
         vertexBuffer.position(0);
 
-        int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
+        // initialize byte buffer for the draw list
+        ByteBuffer dlb = ByteBuffer.allocateDirect(
+                // (# of coordinate values * 2 bytes per short)
+                drawOrder.length * 2);
+        dlb.order(ByteOrder.nativeOrder());
+        drawListBuffer = dlb.asShortBuffer();
+        drawListBuffer.put(drawOrder);
+        drawListBuffer.position(0);
+
+        // prepare shaders and OpenGL program
+        int vertexShader = MyGLRenderer.loadShader(
+                GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
-        int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
+        int fragmentShader = MyGLRenderer.loadShader(
+                GLES20.GL_FRAGMENT_SHADER,
                 fragmentShaderCode);
 
-        // create empty OpenGL ES Program
-        mProgram = GLES20.glCreateProgram();
-
-        // add the vertex shader to program
-        GLES20.glAttachShader(mProgram, vertexShader);
-
-        // add the fragment shader to program
-        GLES20.glAttachShader(mProgram, fragmentShader);
-
-        // creates OpenGL ES program executables
-        GLES20.glLinkProgram(mProgram);
-
-
+        mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
+        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
+        GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
     }
 
-    private int mPositionHandle;
-    private int mColorHandle;
-
-    private final int vertexCount = cubeCoords.length / COORDS_PER_VERTEX;
-    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
-
-
-    public void draw(float[] mMVPMatrix) {
-
+    public void draw(float[] mvpMatrix) {
+        // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
+
+        // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
+
+        // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
+        // Prepare the triangle coordinate data
+        GLES20.glVertexAttribPointer(
+                mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
@@ -117,11 +115,21 @@ public class Cube {
         // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
-        //後で追加
-        // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+        // get handle to shape's transformation matrix
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+        MyGLRenderer.checkGlError("glGetUniformLocation");
+
+        // Apply the projection and view transformation
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+        MyGLRenderer.checkGlError("glUniformMatrix4fv");
+
+        // Draw the square
+        GLES20.glDrawElements(
+                GLES20.GL_TRIANGLES, drawOrder.length,
+                GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
+
 }
