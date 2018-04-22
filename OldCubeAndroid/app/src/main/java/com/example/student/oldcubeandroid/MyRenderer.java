@@ -25,27 +25,24 @@ public class MyRenderer implements GLSurfaceView.Renderer {
     float gray[] = {0.5f, 0.5f, 0.5f, 1.0f};
     float yellow[] = {1.0f, 1.0f, 0.0f, 1.0f};
 
-    /**
-     * 光源の環境光
-     */
+    // 光源の環境光
     private float[] lightAmbient = new float[]{ 0.1f, 0.1f, 0.1f, 1.0f };
 
-    /**
-     * 光源の拡散光
-     */
+    //光源の拡散光
     private float[] lightDiffuse = new float[]{ 0.9f, 0.9f, 0.9f, 1.0f };
 
-    /**
-     * 光源の位置
-     */
+    //光源の位置
     private float[] lightPos  = new float[]{ 0, 0, 2, 1 };
 
+    //ビューのOpenGL ES環境を設定するために一度呼び出し。
     public void onSurfaceCreated(GL10 gl10, EGLConfig config) {
-//        gl10.glEnable(GL10.GL_LIGHTING);
-//        gl10.glEnable(GL10.GL_LIGHT0);
+        //背景色の設定
+        gl10.glClearColor(0.0f,0.0f,0.0f,1.0f);
 
     }
 
+    //デバイスの画面の向きが変更された場合など、
+    // ビューのジオメトリが変更された場合に呼び出される。
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         aspect = (float)width/(float)height;
         gl10.glViewport(0, 0, width, height);
@@ -111,7 +108,7 @@ public class MyRenderer implements GLSurfaceView.Renderer {
 
         }
     }
-    //毎SurFace描画処理
+    //毎SurFace描画処理（再描画ごと）
     public void onDrawFrame(GL10 gl10) {
 
         // ライティングをON
@@ -120,54 +117,28 @@ public class MyRenderer implements GLSurfaceView.Renderer {
         gl10.glEnable(GL10.GL_LIGHT0);
         //　Light0の環境光の設定
         gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, lightAmbient, 0);
-
         //　Light0の拡散光の設定
         gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, lightDiffuse, 0);
-
         //　Light0の場所の設定
         gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPos, 0);
 
-        //gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, yellow, 0);
 
-        //背景色の設定
-        gl10.glClearColor(0.0f,0.0f,0.0f,1.0f);
         //背景色の描画
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-//
-//        // モデルビューモードに設定
-//        gl10.glMatrixMode(GL10.GL_MODELVIEW);
-//
-//        // モデルビュー座標の初期化
-//        gl10.glLoadIdentity();
-//
-//        // 図形の移動
-//        gl10.glTranslatef(0, 0, -2.0f);
-//
-
-
 
         //カメラ転送(GL_PROJECTION:カメラ用行列を示す定数)
         {
             gl10.glMatrixMode(GL10.GL_PROJECTION);
             //操作前のリセット
             gl10.glLoadIdentity();
-            //「視体積」（台形）の決定を行ないカメラから見て奥側を圧縮し正規化。
-            //GLU.gluPerspective(gl,
-            //fovy, ・・・Ｙ方向の画角
-            //aspect, ・・・画面の横ピクセル数÷縦ピクセル数（Ｘ方向の画角が決定）
-            //zNear, ・・・ニアクリップ（これより近いものは描画対象としない）
-            //zFar)・・・ファークリップ（これより遠いものは描画対象としない）
+            //カメラから見て奥側を圧縮し正規化。
             GLU.gluPerspective(gl10, 45.0f,aspect, 0.01f, 100.0f);
-            //被写体の注視点とカメラの位置の決定を行なう
-            //GLU.gluLookAt(gl,
-            //eyeX, eyeY, eyeZ, ・・・カメラの位置
-            //centerX, centerY, centerZ,・・・被写体（カメラの注視点）
-            //upX, upY, upZ)・・・カメラの天井方向/（回転角度を示すベクトル）
+            //被写体の注視点とカメラの位置の決定
             GLU.gluLookAt(gl10, 0, 5.0f, 5.0f, 0, 0, 0.0f, 0.0f, 1.0f, 0.0f);
         }
         {//回転描写
-            gl10.glMatrixMode(GL10.GL_MODELVIEW);//自動カメラ回転
-            gl10.glRotatef(1.0f,0,1,0);
+           // gl10.glMatrixMode(GL10.GL_MODELVIEW);//自動カメラ回転
+            gl10.glRotatef(30.0f,0,1,0);
         }
 
         GL11 gl11 = (GL11) gl10;
