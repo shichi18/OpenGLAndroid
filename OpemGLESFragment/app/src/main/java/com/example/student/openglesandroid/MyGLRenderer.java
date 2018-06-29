@@ -2,8 +2,8 @@ package com.example.student.openglesandroid;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+
 import android.opengl.Matrix;
-import android.os.SystemClock;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -13,16 +13,16 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 //親クラスGLSurfaceView.Renderer→描画されるものを制御する
-class MyGLRenderer implements GLSurfaceView.Renderer{
+class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private Triangle mTriangle;
-    private Square   mSquare;
+    private Square mSquare;
 
     //一回呼び出されViewのOpenGL ESの環境設定
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         //背景のフレームの色を設定
-        GLES20.glClearColor(0.0f,0.0f,0.0f,1.0f);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         // 三角形の初期化
         mTriangle = new Triangle();
@@ -32,6 +32,7 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
 
     //Viewの再描画ごとに呼び出し
     private float[] mRotationMatrix = new float[16];
+
     public void onDrawFrame(GL10 gl) {
         float[] scratch = new float[16];
         //背景色の再描画
@@ -65,15 +66,15 @@ class MyGLRenderer implements GLSurfaceView.Renderer{
     //投影の定義
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        GLES20.glViewport(0,0,width,height);
+        GLES20.glViewport(0, 0, width, height);
 
-        float ratio =(float) width / height;
+        float ratio = (float) width / height;
 
         ///この投影行列はオブジェクトの座標に適用。onDrawFame（）メソッド内。
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
     }
 
-    public static int loadShader(int type, String shaderCode){
+    public static int loadShader(int type, String shaderCode) {
 
         // 頂点シェーダタイプを作成 (GLES20.GL_VERTEX_SHADER)
         //またはフラグメントシェーダタイプ (GLES20.GL_FRAGMENT_SHADER)

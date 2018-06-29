@@ -3,15 +3,17 @@ package com.example.student.openglesandroid;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * Created by student on 2018/04/15.
  */
 class MyGLSurfaceView extends GLSurfaceView {
 
+    public View parentView = null;
     private final MyGLRenderer mRenderer;
 
-    public MyGLSurfaceView(Context context){
+    public MyGLSurfaceView(Context context) {
         super(context);
 
         // OpenGL ES 2.0コンテキストを作成する
@@ -30,6 +32,7 @@ class MyGLSurfaceView extends GLSurfaceView {
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
+
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         // MotionEventは、タッチスクリーンやその他の入力コントロールから入力の詳細をレポート。
@@ -46,12 +49,12 @@ class MyGLSurfaceView extends GLSurfaceView {
 
                 // 中間線より上の回転の逆方向
                 if (y > getHeight() / 2) {
-                    dx = dx * -1 ;
+                    dx = dx * -1;
                 }
 
                 // 中間線の左に回転の逆方向
                 if (x < getWidth() / 2) {
-                    dy = dy * -1 ;
+                    dy = dy * -1;
                 }
 
                 mRenderer.setAngle(
@@ -64,4 +67,6 @@ class MyGLSurfaceView extends GLSurfaceView {
         mPreviousY = y;
         return true;
     }
+
+
 }
