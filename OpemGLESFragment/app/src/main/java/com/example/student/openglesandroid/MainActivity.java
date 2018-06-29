@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(mGLView);
 
         Fragment fragment;
-        fragment =new MainFragment();
+        fragment = new MainFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment,fragment).commit();
+                .add(R.id.fragment, fragment).commit();
     }
 }

@@ -28,12 +28,12 @@ public class MainFragment extends Fragment {
         lview = inflater.inflate(R.layout.fragment_main, container, false);
 
 
-//        GLSurfaceViewインスタンスを作成して設定
+        //GLSurfaceViewインスタンスを作成して設定
         mGLView = new MyGLSurfaceView(this.getActivity());
         //このActivityのContentViewとして指定
-        FrameLayout frameLayout =lview.findViewById(R.id.frame_layout);
-        frameLayout.addView(mGLView,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-//        setContentView(mGLView);
+        FrameLayout frameLayout = lview.findViewById(R.id.frame_layout);
+        frameLayout.addView(mGLView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
 
         return lview;
     }
