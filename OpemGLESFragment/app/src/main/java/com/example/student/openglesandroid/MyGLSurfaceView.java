@@ -6,9 +6,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by student on 2018/04/15.
+ * Created by kumaneko on 2018/04/15.
  */
 class MyGLSurfaceView extends GLSurfaceView {
+
 
     public View parentView = null;
     private final MyGLRenderer mRenderer;
@@ -67,6 +68,4 @@ class MyGLSurfaceView extends GLSurfaceView {
         mPreviousY = y;
         return true;
     }
-
-
 }

@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+/**
+ * Created by kumaneko on 2018/04/15.
+ */
 
 public class MainFragment extends Fragment {
 
@@ -29,9 +32,8 @@ public class MainFragment extends Fragment {
         //GLSurfaceViewインスタンスを作成して設定
         mGLView = new MyGLSurfaceView(this.getActivity());
         //このActivityのContentViewとして指定
-        FrameLayout frameLayout = lview.findViewById(R.id.frame_layout);
+        FrameLayout frameLayout = lview.findViewById(R.id.fragment_layout);
         frameLayout.addView(mGLView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-
         return lview;
     }
 }

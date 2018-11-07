@@ -2,14 +2,13 @@ package com.example.student.openglesandroid;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-
 import android.opengl.Matrix;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by student on 2018/04/12.
+ * Created by kumaneko on 2018/04/12.
  */
 
 //親クラスGLSurfaceView.Renderer→描画されるものを制御する
@@ -55,7 +54,8 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
 
         // 三角形の描画
-        mTriangle.draw(scratch);
+//        mTriangle.draw(scratch);
+        mSquare.draw(scratch);
     }
 
     private final float[] mMVPMatrix = new float[16];// "Model View Projection Matrix"の略

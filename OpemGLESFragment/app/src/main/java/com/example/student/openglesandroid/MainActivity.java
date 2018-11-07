@@ -1,11 +1,13 @@
 package com.example.student.openglesandroid;
 
-import android.opengl.GLSurfaceView;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity{
+/**
+ * Created by kumaneko on 2018/04/15.
+ */
+
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -13,10 +15,9 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
 
-        Fragment fragment;
-        fragment = new MainFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment, fragment).commit();
+        MainFragment mainFragment = new MainFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.replacelayout, mainFragment).commit();
+
     }
 
 
