@@ -10,6 +10,7 @@ import android.view.View;
  */
 class MyGLSurfaceView extends GLSurfaceView {
 
+
     public View parentView = null;
     private final MyGLRenderer mRenderer;
 
@@ -67,6 +68,4 @@ class MyGLSurfaceView extends GLSurfaceView {
         mPreviousY = y;
         return true;
     }
-
-
 }

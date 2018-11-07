@@ -18,12 +18,12 @@ public class Square {
     // 配列の頂点当たりの座標数
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
-            -0.5f,  0.5f, 0.0f,   // top left
+            -0.5f, 0.5f, 0.0f,   // top left
             -0.5f, -0.5f, 0.0f,   // bottom left
             0.5f, -0.5f, 0.0f,   // bottom right
-            0.5f,  0.5f, 0.0f }; // top right
+            0.5f, 0.5f, 0.0f}; // top right
 
-    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // 頂点の描画命令
+    private short drawOrder[] = {0, 1, 2, 0, 2, 3}; // 頂点の描画命令
 
     public Square() {
         // 形状座標の頂点バイトバッファを初期化

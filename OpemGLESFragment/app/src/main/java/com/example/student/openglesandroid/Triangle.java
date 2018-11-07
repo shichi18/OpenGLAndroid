@@ -25,14 +25,12 @@ public class Triangle {
                     "}";
 
 
-
     private final String fragmentShaderCode =
             "precision mediump float;" +
                     "uniform vec4 vColor;" +
                     "void main() {" +
                     "  gl_FragColor = vColor;" +
                     "}";
-
 
 
     private FloatBuffer vertexBuffer;
@@ -45,11 +43,10 @@ public class Triangle {
     // 配列の頂点あたりの座標数
     static final int COORDS_PER_VERTEX = 3;
     static float triangleCoords[] = {   // 反時計回り
-            0.0f,  0.622008459f, 0.0f, // 上
+            0.0f, 0.622008459f, 0.0f, // 上
             -0.5f, -0.311004243f, 0.0f, // 左下
             0.5f, -0.311004243f, 0.0f  // 右下
     };
-
 
 
     public Triangle() {
@@ -94,7 +91,7 @@ public class Triangle {
 
     // RGBAで色設定
     //float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
-    float color[] = { 0.0f, 200.0f, 256.0f, 1.0f };
+    float color[] = {0.0f, 200.0f, 256.0f, 1.0f};
 
     public void draw(float[] mvpMatrix) { // pass in the calculated transformation matrix
 
