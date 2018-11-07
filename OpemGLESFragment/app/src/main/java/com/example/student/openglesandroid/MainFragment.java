@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+/**
+ * Created by kumaneko on 2018/04/15.
+ */
 
 public class MainFragment extends Fragment {
 

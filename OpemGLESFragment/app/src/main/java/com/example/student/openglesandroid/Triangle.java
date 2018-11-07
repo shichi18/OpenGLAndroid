@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * Created by student on 2018/04/13.
+ * Created by kumaneko on 2018/04/13.
  */
 
 public class Triangle {
@@ -57,13 +57,10 @@ public class Triangle {
 
         // device hardwareのnative byte orderを使用
         bb.order(ByteOrder.nativeOrder());
-
         // ByteBufferFloatBufferからを作成
         vertexBuffer = bb.asFloatBuffer();
-
         //FloatBufferに座標追加
         vertexBuffer.put(triangleCoords);
-
         // 最初の座標を読み取るためにバッファを設定
         vertexBuffer.position(0);
 

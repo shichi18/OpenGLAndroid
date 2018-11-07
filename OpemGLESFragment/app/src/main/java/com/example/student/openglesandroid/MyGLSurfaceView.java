@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by student on 2018/04/15.
+ * Created by kumaneko on 2018/04/15.
  */
 class MyGLSurfaceView extends GLSurfaceView {
 
